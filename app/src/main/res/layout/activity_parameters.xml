@@ -3,34 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/conslayout"
-    android:background="@color/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ParametersActivity">
+    android:background="@color/colorPrimary"
+    android:fitsSystemWindows="true"
+    tools:context=".settings.activity.ParametersActivity">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <include
-                layout="@layout/card_title_bar_parameters" />
+            <include layout="@layout/card_title_bar_parameters" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -42,30 +42,30 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_marginTop="30dp"
-                        android:textSize="15sp"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginRight="25dp"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:fontFamily="@font/poppins_bold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginRight="25dp"
+                        android:fontFamily="@font/poppins_bold"
                         android:maxLines="1"
-                        android:text="CONFIDENCE_THRESHOLD">
+                        android:text="CONFIDENCE_THRESHOLD"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="15sp">
 
                     </TextView>
 
                     <TextView
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="5dp"
-                        android:textSize="12sp"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginRight="25dp"
-                        android:textColor="@color/colorAccent"
-                        android:fontFamily="@font/poppins_bold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="This threshold determines the minimum confidence score required for an object detection to be considered valid. Any detection with a confidence score below this threshold will be discarded.">
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginBottom="5dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="This threshold determines the minimum confidence score required for an object detection to be considered valid. Any detection with a confidence score below this threshold will be discarded."
+                        android:textColor="@color/colorAccent"
+                        android:textSize="12sp">
 
                     </TextView>
 
@@ -80,19 +80,19 @@
 
                         <SeekBar
                             android:id="@+id/thresholdbar"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginRight="15dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="25dp"
+                            android:layout_marginRight="15dp"
                             android:layout_weight="1">
 
                         </SeekBar>
 
                         <TextView
                             android:id="@+id/thresholdval"
-                            android:layout_marginRight="25dp"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginRight="25dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/poppins_bold"
                             android:maxLines="1"
@@ -104,7 +104,6 @@
                     </LinearLayout>
 
 
-
                 </LinearLayout>
 
             </ScrollView>
@@ -112,26 +111,26 @@
         </LinearLayout>
 
         <ImageButton
-            android:layout_gravity="bottom"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:id="@+id/reset_btn"
-            android:background="@drawable/bg_button_reset"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/bg_button_reset">
 
         </ImageButton>
 
         <ImageButton
-            android:layout_gravity="bottom"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:id="@+id/save_btn"
-            android:background="@drawable/bg_button_savechanges"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/bg_button_savechanges">
 
         </ImageButton>
 

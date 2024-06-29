@@ -11,17 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.onesandzeros.patima.R;
-import com.onesandzeros.patima.summary.activity.SummaryActivity;
 import com.onesandzeros.patima.core.utils.UrlUtils;
 import com.onesandzeros.patima.prediction.model.Image;
+import com.onesandzeros.patima.summary.activity.SummaryActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
-
-    private List<Image> imageList;
-    private Context context;
+    private final List<Image> imageList;
+    private final Context context;
 
     public ImageAdapter(List<Image> imageList, Context context) {
         this.imageList = imageList;
@@ -56,7 +55,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 intent.putExtra("imgId", image.getImageId());
                 intent.putExtra("base_path", image.getInputImagePath());
                 intent.putExtra("detection_path", image.getPredictedImagePath());
-                intent.putExtra("timestamp", image.getCreatedAt());
+                intent.putExtra("location", image.getTagName());
                 context.startActivity(intent);
 
             }

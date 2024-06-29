@@ -1,11 +1,8 @@
-package com.onesandzeros.patima;
-
-import static java.lang.Integer.parseInt;
+package com.onesandzeros.patima.settings.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -14,15 +11,17 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.onesandzeros.patima.R;
+
 public class ParametersActivity extends AppCompatActivity {
 
+    final private float RESET_DETECT_THRESHOLD = 0.6F;
+    SharedPreferences sharedPreferences;
+    ImageButton backBtn;
     private SeekBar thresholdSlider;
     private TextView thresholdValueText;
     private ImageButton saveBtn, resetBtn;
     private float DETECT_THRESHOLD;
-    final private float RESET_DETECT_THRESHOLD = 0.6F;
-    SharedPreferences sharedPreferences;
-    ImageButton backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +31,13 @@ public class ParametersActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("Startup", MODE_PRIVATE);
 
-        DETECT_THRESHOLD = sharedPreferences.getFloat("CONFIDENCE_THRESHOLD",0);
+        DETECT_THRESHOLD = sharedPreferences.getFloat("CONFIDENCE_THRESHOLD", 0);
         thresholdSlider = findViewById(R.id.thresholdbar);
         thresholdValueText = findViewById(R.id.thresholdval);
 
         saveBtn = findViewById(R.id.save_btn);
         resetBtn = findViewById(R.id.reset_btn);
+        backBtn = findViewById(R.id.return_button);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +58,12 @@ public class ParametersActivity extends AppCompatActivity {
             }
         });
 
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         changeParameters();
 
     }
@@ -66,7 +72,7 @@ public class ParametersActivity extends AppCompatActivity {
 
         float initialThreshold = DETECT_THRESHOLD * 100;
         thresholdSlider.setProgress((int) initialThreshold);
-        thresholdValueText.setText(String.valueOf(initialThreshold/100));
+        thresholdValueText.setText(String.valueOf(initialThreshold / 100));
 
         thresholdSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

@@ -17,9 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.onesandzeros.patima.MainActivity;
 import com.onesandzeros.patima.R;
+import com.onesandzeros.patima.authentication.network.AuthenticationApiService;
 import com.onesandzeros.patima.authentication.network.LoginRequest;
 import com.onesandzeros.patima.authentication.network.LoginResponse;
-import com.onesandzeros.patima.authentication.network.AuthenticationApiService;
 import com.onesandzeros.patima.core.network.ApiClient;
 import com.onesandzeros.patima.core.utils.Singleton;
 import com.onesandzeros.patima.core.utils.TokenManager;
@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         regTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, ChooseRole.class);
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }

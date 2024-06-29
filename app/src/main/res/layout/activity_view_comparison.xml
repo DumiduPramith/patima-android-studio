@@ -3,34 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/conslayout"
-    android:background="@color/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".prediction.activity.ViewComparisonActivity">
+    android:background="@color/colorPrimary"
+    tools:context=".ViewComparisonActivity">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <include
-                layout="@layout/card_title_bar_comparison" />
+            <include layout="@layout/card_title_bar_comparison" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -42,23 +41,21 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:visibility="gone"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
                         android:id="@+id/base_image"
                         android:layout_width="300dp"
                         android:layout_height="500dp"
-                        android:background="@drawable/bg_welcome">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:visibility="gone">
 
                     </ImageView>
 
                     <ImageView
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
                         android:id="@+id/processed_image"
                         android:layout_width="300dp"
                         android:layout_height="500dp"
-                        android:background="@drawable/bg_welcome">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp">
 
                     </ImageView>
 
@@ -67,8 +64,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
                         android:layout_marginTop="15dp"
+                        android:layout_marginRight="15dp"
                         android:fontFamily="@font/poppins"
                         android:text="Touch on the image to see a comparison of Input and processed images."
                         android:textAlignment="center"
@@ -77,24 +74,24 @@
                     </TextView>
 
                     <ImageView
-                        android:layout_marginTop="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:src="@drawable/txt_moreoptions">
 
                     </ImageView>
 
                     <ImageButton
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginTop="15dp"
                         android:id="@+id/feedback_Btn"
-                        android:background="@drawable/bg_button_feedback"
-                        android:textColor="@color/colorPrimaryDark"
                         android:layout_width="match_parent"
-                        android:text="Open Camera"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/bg_button_feedback"
                         android:fontFamily="@font/poppins_bold"
-                        android:layout_height="wrap_content">
+                        android:text="Open Camera"
+                        android:textColor="@color/colorPrimaryDark">
 
                     </ImageButton>
 

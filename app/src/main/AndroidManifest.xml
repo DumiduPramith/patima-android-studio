@@ -31,7 +31,7 @@
             android:name=".TestActivity"
             android:exported="false" />
         <activity
-            android:name=".authentication.activity.ChooseRole"
+            android:name=".feedback.activity.ViewSingleFeedbackActivity"
             android:exported="false" />
         <activity
             android:name=".user.activity.ProfileActivity"
@@ -40,7 +40,7 @@
             android:name=".feedback.activity.ViewFeedbackActivity"
             android:exported="false" />
         <activity
-            android:name=".ParametersActivity"
+            android:name=".settings.activity.ParametersActivity"
             android:exported="false" />
         <activity
             android:name=".core.activity.PermissionActivity"

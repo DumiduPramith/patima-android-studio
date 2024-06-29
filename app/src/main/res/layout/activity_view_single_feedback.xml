@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/conslayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".feedback.activity.ViewSingleFeedbackActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/card_title_bar_singlefeedback" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/processed_image"
+                android:layout_width="200dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp">
+
+            </ImageView>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="15dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Overall Rating"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimaryDark">
+
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="5dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
+
+                        <ImageButton
+                            android:id="@+id/star_lvl1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
+                            android:background="@color/colorPrimary"
+                            android:src="@drawable/ic_rating_notfilled_small">
+
+                        </ImageButton>
+
+                        <ImageButton
+                            android:id="@+id/star_lvl2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
+                            android:background="@color/colorPrimary"
+                            android:src="@drawable/ic_rating_notfilled_small">
+
+                        </ImageButton>
+
+                        <ImageButton
+                            android:id="@+id/star_lvl3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
+                            android:background="@color/colorPrimary"
+                            android:src="@drawable/ic_rating_notfilled_small">
+
+                        </ImageButton>
+
+                        <ImageButton
+                            android:id="@+id/star_lvl4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
+                            android:background="@color/colorPrimary"
+                            android:src="@drawable/ic_rating_notfilled_small">
+
+                        </ImageButton>
+
+                        <ImageButton
+                            android:id="@+id/star_lvl5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
+                            android:background="@color/colorPrimary"
+                            android:src="@drawable/ic_rating_notfilled_small">
+
+                        </ImageButton>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/star_lvl_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="Please rate the image based on your opinion."
+                        android:textColor="@color/colorPrimaryDark">
+
+                    </TextView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginRight="15dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Does the textures and colors of the generated head matches with the rest of the Statue?"
+                        android:textColor="@color/colorPrimaryDark">
+
+                    </TextView>
+
+                    <EditText
+                        android:id="@+id/spinner_one"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/bg_edittext_feedback"
+                        android:enabled="false"
+                        android:fontFamily="@font/poppins"
+                        android:hint="Feedback"
+                        android:maxLines="1"
+                        android:padding="18dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="15dp">
+
+                    </EditText>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Does the scale and measurements of the generated head matches with the rest of the Statue?"
+                        android:textColor="@color/colorPrimaryDark">
+
+                    </TextView>
+
+                    <EditText
+                        android:id="@+id/spinner_two"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/bg_edittext_feedback"
+                        android:enabled="false"
+                        android:fontFamily="@font/poppins"
+                        android:hint="Feedback"
+                        android:maxLines="1"
+                        android:padding="18dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="15dp">
+
+                    </EditText>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Does the placement and elevation of the generated head matches with the rest of the Statue?"
+                        android:textColor="@color/colorPrimaryDark">
+
+                    </TextView>
+
+                    <EditText
+                        android:id="@+id/spinner_three"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/bg_edittext_feedback"
+                        android:enabled="false"
+                        android:fontFamily="@font/poppins"
+                        android:hint="Feedback"
+                        android:padding="18dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="15dp">
+
+                    </EditText>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Other feedback"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimaryDark">
+
+                    </TextView>
+
+                    <EditText
+                        android:id="@+id/feedback_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/bg_edittext_feedback"
+                        android:enabled="false"
+                        android:fontFamily="@font/poppins"
+                        android:hint="Mention your feedback here"
+                        android:maxLength="300"
+                        android:padding="18dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="15dp">
+
+                    </EditText>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,8 @@
 package com.onesandzeros.patima.feedback.activity;
 
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,17 +10,23 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.onesandzeros.patima.R;
-import com.onesandzeros.patima.SQLiteHelper;
+import com.onesandzeros.patima.core.network.ApiClient;
 import com.onesandzeros.patima.feedback.adapter.FeedbackAdapter;
 import com.onesandzeros.patima.feedback.model.Feedback;
+import com.onesandzeros.patima.feedback.network.FeedbackApiService;
+import com.onesandzeros.patima.feedback.network.FeedbackResponse;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ViewFeedbackActivity extends AppCompatActivity {
 
-    SQLiteHelper dbHelper;
     TextView detectTxt;
+
+    ImageButton backBtn;
     private RecyclerView feedbackContainer;
     private List<Feedback> feedbackList;
     private FeedbackAdapter feedbackAdapter;
@@ -34,53 +38,44 @@ public class ViewFeedbackActivity extends AppCompatActivity {
 
         detectTxt = findViewById(R.id.detect_Txt);
         feedbackContainer = findViewById(R.id.feedback_container);
+        backBtn = findViewById(R.id.return_button);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Startup", MODE_PRIVATE);
-        int userid = sharedPreferences.getInt("userId", 0);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        loaduserFeedbacks(userid);
+        loaduserFeedbacks();
 
     }
 
-    private void loaduserFeedbacks(int userid) {
+    private void loaduserFeedbacks() {
+        FeedbackApiService feedbackApiService = ApiClient.getClient(this).create(FeedbackApiService.class);
+        Call<FeedbackResponse> call = feedbackApiService.retrieveAllSubmittedFeedbacks();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Startup", MODE_PRIVATE);
-        String username = sharedPreferences.getString("username", "");
+        call.enqueue(new Callback<FeedbackResponse>() {
+            @Override
+            public void onResponse(Call<FeedbackResponse> call, Response<FeedbackResponse> response) {
+                if (response.isSuccessful()) {
+                    FeedbackResponse feedbackResponse = response.body();
+                    feedbackList = feedbackResponse.getFeedbacks();
 
-        dbHelper = new SQLiteHelper(this);
-        feedbackList = new ArrayList<>();
-//        feedbackAdapter = new FeedbackAdapter(feedbackList, this, username, dbHelper,false,userid);
+                    feedbackAdapter = new FeedbackAdapter(feedbackList, ViewFeedbackActivity.this, false);
+                    int spanCount = 1;
+                    GridLayoutManager layoutManager = new GridLayoutManager(ViewFeedbackActivity.this, spanCount);
+                    feedbackContainer.setLayoutManager(layoutManager);
+                    feedbackContainer.setAdapter(feedbackAdapter);
+                }
+            }
 
-        int spanCount = 1;
-        GridLayoutManager layoutManager = new GridLayoutManager(ViewFeedbackActivity.this, spanCount);
-        feedbackContainer.setLayoutManager(layoutManager);
+            @Override
+            public void onFailure(Call<FeedbackResponse> call, Throwable t) {
 
-        feedbackContainer.setAdapter(feedbackAdapter);
+            }
+        });
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] projection = {"Feedback_Id", "Description", "Ratings", "Image_Id"};
-        String selection = "User_Id = ?";
-        String[] selectionArgs = {String.valueOf(userid)};
 
-        Cursor cursor = db.query("FEEDBACK", projection, selection, selectionArgs, null, null, "Feedback_Id DESC");
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int feedback_Id = cursor.getInt(cursor.getColumnIndexOrThrow("Feedback_Id"));
-                String desc = cursor.getString(cursor.getColumnIndexOrThrow("Description"));
-                int rating = cursor.getInt(cursor.getColumnIndexOrThrow("Ratings"));
-                int image_Id = cursor.getInt(cursor.getColumnIndexOrThrow("Image_Id"));
-
-                Feedback feedback = new Feedback(feedback_Id, desc, rating, image_Id);
-                feedbackList.add(feedback);
-            } while (cursor.moveToNext());
-            detectTxt.setVisibility(View.GONE);
-            cursor.close();
-            feedbackAdapter.notifyDataSetChanged();
-        } else {
-            detectTxt.setVisibility(View.VISIBLE);
-        }
-
-        db.close();
     }
 }

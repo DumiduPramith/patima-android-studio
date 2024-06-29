@@ -11,9 +11,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.onesandzeros.patima.R;
-import com.onesandzeros.patima.TestActivity;
-import com.onesandzeros.patima.authentication.activity.ChooseRole;
 import com.onesandzeros.patima.authentication.activity.LoginActivity;
+import com.onesandzeros.patima.authentication.activity.RegisterActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -33,7 +32,7 @@ public class WelcomeActivity extends AppCompatActivity {
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WelcomeActivity.this, ChooseRole.class);
+                Intent intent = new Intent(WelcomeActivity.this, RegisterActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }

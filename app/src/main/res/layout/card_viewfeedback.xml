@@ -1,81 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        app:cardCornerRadius="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="5dp"
+        app:cardCornerRadius="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                app:cardCornerRadius="10dp"
-                android:src="@drawable/ic_welcome"
                 android:id="@+id/feedimg_img"
-                android:padding="5dp"
                 android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:padding="2dp"
                 android:scaleType="fitCenter"
-                android:layout_height="100dp">
+                android:src="@drawable/ic_welcome"
+                app:cardCornerRadius="10dp">
 
             </ImageView>
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:padding="10dp"
                 android:id="@+id/profile_img"
-                android:visibility="gone"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/placeholder_profile">
+                android:padding="10dp"
+                android:src="@drawable/placeholder_profile"
+                android:visibility="gone">
 
             </de.hdodenhof.circleimageview.CircleImageView>
 
             <LinearLayout
-                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="5dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/feedtxt_username"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:fontFamily="@font/poppins_bold"
+                    android:id="@+id/feedtxt_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:maxLines="1"
                     android:text="This is the feedback I want to share"
-                    android:maxLines="1">
+                    android:textColor="@color/colorPrimaryDark">
 
                 </TextView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/star_lvl1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_rating_notfilled_small">
+
+                    </ImageButton>
+
+                    <ImageButton
+                        android:id="@+id/star_lvl2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_rating_notfilled_small">
+
+                    </ImageButton>
+
+                    <ImageButton
+                        android:id="@+id/star_lvl3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_rating_notfilled_small">
+
+                    </ImageButton>
+
+                    <ImageButton
+                        android:id="@+id/star_lvl4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_rating_notfilled_small">
+
+                    </ImageButton>
+
+                    <ImageButton
+                        android:id="@+id/star_lvl5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_rating_notfilled_small">
+
+                    </ImageButton>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/feedtxt_rate"
-                    android:textColor="@color/colorPrimary"
-                    android:fontFamily="@font/poppins_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:maxLines="1"
                     android:text="5/5"
-                    android:maxLines="1">
+                    android:textColor="@color/colorPrimary"
+                    android:visibility="gone">
 
                 </TextView>
 
                 <TextView
-                    android:id="@+id/feedtxt_feedback"
-                    android:textColor="@color/colorPrimary"
-                    android:fontFamily="@font/poppins"
+                    android:id="@+id/feedtxt_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
                     android:maxLines="1"
                     android:text="By Malindu Liyanage"
-                    android:textStyle="italic">
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold">
 
                 </TextView>
 

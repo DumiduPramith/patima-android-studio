@@ -1,7 +1,6 @@
 package com.onesandzeros.patima.messages.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,17 +14,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.onesandzeros.patima.MainActivity;
 import com.onesandzeros.patima.R;
-import com.onesandzeros.patima.SQLiteHelper;
 import com.onesandzeros.patima.core.network.ApiClient;
 import com.onesandzeros.patima.core.utils.IsLoggedIn;
-import com.onesandzeros.patima.messages.adapter.MessageApiService;
 import com.onesandzeros.patima.messages.model.Message;
 import com.onesandzeros.patima.messages.model.MessageCommonResponse;
+import com.onesandzeros.patima.messages.network.MessageApiService;
 import com.onesandzeros.patima.shared.LoadingDialog;
 import com.onesandzeros.patima.user.utils.ProfileManager;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;

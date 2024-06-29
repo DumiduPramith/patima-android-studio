@@ -1,49 +1,57 @@
 package com.onesandzeros.patima.feedback.model;
 
-public class Feedback {
+import java.io.Serializable;
 
-    private int feedback_id;
-    private int rating;
-    private int img_id;
-    private String desc;
+public class Feedback implements Serializable {
+    private final int rating;
+    private final String question1;
+    private final String question2;
+    private final String question3;
+    private final String feedback;
+    private final int image_id;
 
-    public Feedback(int feedback_id, String desc, int rating, int img_id) {
-        this.feedback_id = feedback_id;
-        this.desc = desc;
+    private String input_image_path;
+    private String predicted_image_path;
+
+
+    public Feedback(int rating, String question1, String question2, String question3, String feedback, int pred_id) {
         this.rating = rating;
-        this.img_id = img_id;
-
-    }
-
-    public int getFeedback_id() {
-        return feedback_id;
-    }
-
-    public void setFeedback_id(int feedback_id) {
-        this.feedback_id = feedback_id;
+        this.question1 = question1;
+        this.question2 = question2;
+        this.question3 = question3;
+        this.feedback = feedback;
+        this.image_id = pred_id;
     }
 
     public int getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
-        this.rating = rating;
+    public String getQuestion1() {
+        return question1;
     }
 
-    public int getImg_id() {
-        return img_id;
+    public String getQuestion2() {
+        return question2;
     }
 
-    public void setImg_id(int img_id) {
-        this.img_id = img_id;
+    public String getQuestion3() {
+        return question3;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getFeedback() {
+        return feedback;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public int getPredId() {
+        return image_id;
+    }
+
+    public String getInput_img() {
+        return input_image_path;
+    }
+
+    public String getPredicted_img() {
+        return predicted_image_path;
     }
 }

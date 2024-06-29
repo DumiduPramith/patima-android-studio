@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -47,18 +48,13 @@
                         android:text="Profile Picture"
                         android:textColor="@color/white"></TextView>
 
-                    <ImageButton
-                        android:id="@+id/user_thumb"
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/user_thumb_"
                         android:layout_width="120dp"
                         android:layout_height="160dp"
                         android:background="@drawable/bg_edittext"
-                        android:inputType="text"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/bg_placeholder"
-                        android:textColor="@color/colorAccent"
-                        android:textColorHint="@color/colorAccent" />
-
-
+                        fresco:placeholderImage="@drawable/bg_placeholder" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -148,6 +144,44 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
                         android:maxLines="1"
+                        android:text="Archaelogist ID"
+                        android:textColor="@color/white"></TextView>
+
+                    <EditText
+                        android:id="@+id/archeologist_id_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_edittext"
+                        android:fontFamily="@font/poppins"
+                        android:hint="Archaelogist ID"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:paddingLeft="25dp"
+                        android:paddingTop="18dp"
+                        android:paddingRight="15dp"
+                        android:paddingBottom="18dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="15dp">
+
+                    </EditText>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:maxLines="1"
                         android:text="Email"
                         android:textColor="@color/white"></TextView>
 
@@ -185,7 +219,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
                         android:maxLines="1"
-                        android:text="Password"
+                        android:text="Current Password"
                         android:textColor="@color/white"></TextView>
 
                     <EditText
@@ -195,6 +229,87 @@
                         android:background="@drawable/bg_edittext"
                         android:fontFamily="@font/poppins"
                         android:hint="***********"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:paddingLeft="25dp"
+                        android:paddingTop="18dp"
+                        android:paddingRight="15dp"
+                        android:paddingBottom="18dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="15dp">
+
+                    </EditText>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/New_pass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:maxLines="1"
+                        android:text="New Password"
+                        android:textColor="@color/white"></TextView>
+
+                    <EditText
+                        android:id="@+id/new_pass_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_edittext"
+                        android:fontFamily="@font/poppins"
+                        android:hint="Enter New Password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:paddingLeft="25dp"
+                        android:paddingTop="18dp"
+                        android:paddingRight="15dp"
+                        android:paddingBottom="18dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="15dp">
+
+                    </EditText>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/confirmNew_pass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:maxLines="1"
+                        android:text="Confirm New Password"
+                        android:textColor="@color/white"></TextView>
+
+                    <EditText
+                        android:id="@+id/confirm_new_pass_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_edittext"
+                        android:fontFamily="@font/poppins"
+                        android:hint="Enter New Password"
+                        android:inputType="textPassword"
                         android:maxLines="1"
                         android:paddingLeft="25dp"
                         android:paddingTop="18dp"
@@ -302,6 +417,18 @@
                         android:fontFamily="@font/poppins_bold"
                         android:text="Edit Profile"
                         android:textColor="@color/colorAccent"
+                        app:cornerRadius="10sp" />
+
+                    <Button
+                        android:id="@+id/btn_delete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:backgroundTint="@color/colorPrimaryDark"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Delete Profile"
+                        android:textColor="@color/colorAccent"
+                        android:visibility="gone"
                         app:cornerRadius="10sp" />
 
 

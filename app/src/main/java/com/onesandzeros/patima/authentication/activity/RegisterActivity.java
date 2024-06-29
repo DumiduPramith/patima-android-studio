@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +32,12 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    RadioButton generalRegister, archeologistRegister;
+    RadioGroup radioGroup;
+    boolean isGeneraluser = true;
     private TextView loginTxt, contactTxt;
     private EditText firstnameTxt, lastnameTxt, emailTxt, arcIdTxt, passwordTxt, confirmPasswordTxt;
     private Button registerBtn;
-
     private String selectedRole;
 
     private LoadingDialog loadingDialog;
@@ -46,8 +50,6 @@ public class RegisterActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_register);
 
-        Intent intent = getIntent();
-        selectedRole = intent.getStringExtra("role");
 
         loadingDialog = new LoadingDialog(this);
 
@@ -61,11 +63,28 @@ public class RegisterActivity extends AppCompatActivity {
         contactTxt = findViewById(R.id.contact_Txt);
         registerBtn = findViewById(R.id.register_btn); //register Btn
 
-        if (selectedRole.equals("archeologist")) {
-            arcIdTxt.setVisibility(View.VISIBLE);
-        } else {
-            arcIdTxt.setVisibility(View.GONE);
-        }
+        generalRegister = findViewById(R.id.radio_general);
+        archeologistRegister = findViewById(R.id.radio_archeologist);
+        RadioGroup radioGroup = findViewById(R.id.radio_group);
+
+
+        // Optional: Set a listener on the radio group to handle radio button selection changes
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radio_general) {
+                    arcIdTxt.setVisibility(View.GONE);
+                    arcIdTxt.setEnabled(false);
+                    isGeneraluser = true;
+                    selectedRole = "general";
+                } else if (checkedId == R.id.radio_archeologist) {
+                    arcIdTxt.setVisibility(View.VISIBLE);
+                    arcIdTxt.setEnabled(true);
+                    isGeneraluser = false;
+                    selectedRole = "archeologist";
+                }
+            }
+        });
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override

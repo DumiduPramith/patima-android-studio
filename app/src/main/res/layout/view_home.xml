@@ -1,70 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimaryDark"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
 
     <LinearLayout
-        android:layout_margin="10dp"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="vertical">
 
             <LinearLayout
-                android:gravity="center"
-                android:layout_margin="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <!--                <de.hdodenhof.circleimageview.CircleImageView-->
+                <!--                    android:id="@+id/profile_img"-->
+                <!--                    android:layout_width="80dp"-->
+                <!--                    android:layout_height="80dp">-->
+
+                <!--                </de.hdodenhof.circleimageview.CircleImageView>-->
+
+                <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/profile_img"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/placeholder_profile">
-
-                </de.hdodenhof.circleimageview.CircleImageView>
+                    fresco:actualImageScaleType="centerCrop"
+                    fresco:failureImage="@drawable/bg_placeholder"
+                    fresco:placeholderImage="@drawable/placeholder_profile"
+                    fresco:roundAsCircle="true" />
 
                 <LinearLayout
-                    android:gravity="center"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/username_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
                         android:fontFamily="@font/poppins_bold"
                         android:maxLines="1"
                         android:text="User Name"
-                        android:textColor="@color/white">
+                        android:textColor="@color/white"
+                        android:textSize="20sp">
 
                     </TextView>
 
                     <TextView
                         android:id="@+id/usertype_text"
-                        android:textColor="@color/white"
-                        android:fontFamily="@font/poppins"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
+                        android:fontFamily="@font/poppins"
                         android:maxLines="1"
-                        android:text="User Type">
+                        android:text="User Type"
+                        android:textColor="@color/white"
+                        android:textSize="18sp">
 
                     </TextView>
 
@@ -75,9 +84,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <include
                 android:id="@+id/img_capture_btn"
@@ -86,28 +95,28 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_margin="10dp"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
             <TextView
-                android:textColor="@color/colorPrimary"
-                android:fontFamily="@font/poppins_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_bold"
                 android:maxLines="1"
-                android:text="Your recently restored statue gallery...">
+                android:text="Your recently restored statue gallery..."
+                android:textColor="@color/colorPrimary">
 
             </TextView>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_margin="10dp"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/image_container"
@@ -119,21 +128,21 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_margin="10dp"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/detect_Txt"
-                android:gravity="center"
-                android:visibility="gone"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent"
-                android:fontFamily="@font/poppins_bold"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:text="No detections. Click on above card to detect objects with AI">
+                android:fontFamily="@font/poppins_bold"
+                android:gravity="center"
+                android:text="No detections. Click on above card to detect objects with AI"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:visibility="gone">
 
             </TextView>
 

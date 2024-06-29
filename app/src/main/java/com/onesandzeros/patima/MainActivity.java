@@ -3,13 +3,13 @@ package com.onesandzeros.patima;
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,6 +29,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.onesandzeros.patima.authentication.utils.AuthenticationHelper;
 import com.onesandzeros.patima.core.activity.PermissionActivity;
 import com.onesandzeros.patima.core.activity.WelcomeActivity;
@@ -41,28 +43,27 @@ import com.onesandzeros.patima.messages.activity.AdminContactActivity;
 import com.onesandzeros.patima.prediction.activity.ImageAcquisitionActivity;
 import com.onesandzeros.patima.prediction.adapter.ImageAdapter;
 import com.onesandzeros.patima.prediction.model.Image;
-import com.onesandzeros.patima.prediction.network.RetrievePredictionsResponse;
 import com.onesandzeros.patima.prediction.network.PredictionApiService;
-import com.onesandzeros.patima.user.utils.LoadAccountCallback;
+import com.onesandzeros.patima.prediction.network.RetrievePredictionsResponse;
+import com.onesandzeros.patima.settings.activity.ParametersActivity;
 import com.onesandzeros.patima.user.activity.ProfileActivity;
 import com.onesandzeros.patima.user.utils.LoadAccount;
+import com.onesandzeros.patima.user.utils.LoadAccountCallback;
 import com.onesandzeros.patima.user.utils.ProfileManager;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    SQLiteHelper dbHelper;
     TextView userName, userType, detectTxt;
-    CircleImageView profilePicture;
+    //    CircleImageView profilePicture;
+    SimpleDraweeView profileImg;
     String latitudeString = null, longitudeString = null;
     LinearLayout profileBtn, feedbackBtn, admincontactBtn, appsettingBtn, logoutBtn;
     private FrameLayout contentViewContainer;
@@ -82,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initialState();
-
-        dbHelper = new SQLiteHelper(MainActivity.this);
 
         contentViewContainer = findViewById(R.id.content_view_container);
         bottomNavigationBar = findViewById(R.id.bottom_bar);
@@ -107,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                 profileButton.setImageResource(R.drawable.btn_user_round);
             }
         });
-        loadAccount();
 
         ContentValues contentValues = new ContentValues();
         Location location = getLocation(MainActivity.this); // Implement getLocation() method below
@@ -156,31 +154,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initialState() {
-        String accessToken = null;
         SharedPreferences sharedPreferences = getSharedPreferences("patima", MODE_PRIVATE);
         if (!IsLoggedIn.isLoggedIn(MainActivity.this)) {
             Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             finish();
-        }
+        } else {
 
-        if (!allPermissionsGranted()) {
-            Intent intent = new Intent(MainActivity.this, PermissionActivity.class);
-            startActivity(intent);
-            finish();
-        }
+            if (!allPermissionsGranted()) {
+                Intent intent = new Intent(MainActivity.this, PermissionActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
 
-        if (!sharedPreferences.contains("CONFIDENCE_THRESHOLD")) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putFloat("CONFIDENCE_THRESHOLD", 0.6F);
-            editor.apply();
+            if (!sharedPreferences.contains("CONFIDENCE_THRESHOLD")) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putFloat("CONFIDENCE_THRESHOLD", 0.6F);
+                editor.apply();
+            }
+            loadAccount();
         }
-
 
     }
 
     private void loadAccount() {
+
         if (!Singleton.getInstance().isFunctionRun()) {
             LoadAccount.loadAccount(MainActivity.this, new LoadAccountCallback() {
                 @Override
@@ -198,18 +198,17 @@ public class MainActivity extends AppCompatActivity {
     private void showHomeView() {
         isHome = true;
 
-
         contentViewContainer.removeAllViews();
         View homeView = getLayoutInflater().inflate(R.layout.view_home, null);
         contentViewContainer.addView(homeView);
 
         imagecaptureBtn = findViewById(R.id.img_capture_btn);
-        profilePicture = findViewById(R.id.profile_img);
+//        profilePicture = findViewById(R.id.profile_img);
+        profileImg = findViewById(R.id.profile_img);
         detectTxt = findViewById(R.id.detect_Txt);
 
 
-        SharedPreferences prefs = getSharedPreferences("profile", Context.MODE_PRIVATE);
-        String userTypest = prefs.getString("profile_role", "");
+        String userTypest = ProfileManager.getProfileRole(MainActivity.this);
         String username = ProfileManager.getProfileName(MainActivity.this);
 
         userName = findViewById(R.id.username_text);
@@ -231,11 +230,15 @@ public class MainActivity extends AppCompatActivity {
         if (profilepicturePath != null) {
 
             String fullUrl = UrlUtils.getFullUrl(profilepicturePath);
-            Picasso.get()
-                    .load(fullUrl)
-                    .placeholder(R.drawable.placeholder_profile)
-                    .error(R.drawable.placeholder_profile)
-                    .into(profilePicture);
+            RoundingParams roundingParams = RoundingParams.asCircle();
+            profileImg.getHierarchy().setRoundingParams(roundingParams);
+            Uri uri = Uri.parse(fullUrl);
+            profileImg.setImageURI(uri);
+//            Picasso.get()
+//                    .load(fullUrl)
+//                    .placeholder(R.drawable.placeholder_profile)
+//                    .error(R.drawable.placeholder_profile)
+//                    .into(profilePicture);
         }
 
         detectedObjects();
@@ -255,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
         PredictionApiService predictionApiService = ApiClient.getClient(this).create(PredictionApiService.class);
         Call<RetrievePredictionsResponse> call = predictionApiService.retrievePredictions(1);
         if (imageList.isEmpty()) {
-
             call.enqueue(new Callback<RetrievePredictionsResponse>() {
                 @Override
                 public void onResponse(Call<RetrievePredictionsResponse> call, Response<RetrievePredictionsResponse> response) {
@@ -293,8 +295,8 @@ public class MainActivity extends AppCompatActivity {
         contentViewContainer.addView(profileView);
 
         userName = findViewById(R.id.username_text);
-        profilePicture = findViewById(R.id.profile_img);
-
+//        profilePicture = findViewById(R.id.profile_img);
+        profileImg = findViewById(R.id.profile_img);
         profileBtn = findViewById(R.id.menu_profile);
         feedbackBtn = findViewById(R.id.menu_feedback);
         admincontactBtn = findViewById(R.id.menu_contactadmin);
@@ -314,11 +316,17 @@ public class MainActivity extends AppCompatActivity {
             feedbackBtn.setEnabled(false);
         }
         if (profilepicturePath != null) {
-            Picasso.get()
-                    .load(profilepicturePath)
-                    .placeholder(R.drawable.placeholder_profile)
-                    .error(R.drawable.placeholder_profile)
-                    .into(profilePicture);
+            RoundingParams roundingParams = RoundingParams.asCircle();
+            profileImg.getHierarchy().setRoundingParams(roundingParams);
+            Uri uri = Uri.parse(profilepicturePath);
+            profileImg.setImageURI(uri);
+//            Picasso.get()
+//                    .load(profilepicturePath)
+//                    .placeholder(R.drawable.placeholder_profile)
+//                    .error(R.drawable.placeholder_profile)
+//                    .into(profilePicture);
+
+
         }
 
         profileBtn.setOnClickListener(new View.OnClickListener() {
@@ -361,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.setMessage("Are you sure you want to logout ?");
                 builder.setTitle("   Patima");
                 builder.setCancelable(false);
-                builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
+                builder.setPositiveButton("Yes", (dialog, which) -> {
                     Boolean isLoggedOut = AuthenticationHelper.logOut(MainActivity.this);
                     if (isLoggedOut) {
                         Intent intent = new Intent(MainActivity.this, MainActivity.class);
@@ -374,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 });
-                builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
+                builder.setNegativeButton("No", (dialog, which) -> {
                     dialog.cancel();
                 });
                 AlertDialog alertDialog = builder.create();

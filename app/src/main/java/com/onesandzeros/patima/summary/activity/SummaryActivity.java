@@ -1,19 +1,13 @@
 package com.onesandzeros.patima.summary.activity;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.toDegrees;
-import static java.lang.Math.toRadians;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.UserManager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,9 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.onesandzeros.patima.LocationAdapter;
 import com.onesandzeros.patima.R;
-import com.onesandzeros.patima.SQLiteHelper;
 import com.onesandzeros.patima.core.network.ApiClient;
 import com.onesandzeros.patima.core.utils.UrlUtils;
 import com.onesandzeros.patima.feedback.activity.FeedbackActivity;
@@ -31,9 +23,20 @@ import com.onesandzeros.patima.feedback.adapter.FeedbackAdapter;
 import com.onesandzeros.patima.feedback.model.Feedback;
 import com.onesandzeros.patima.feedback.network.FeedbackApiService;
 import com.onesandzeros.patima.feedback.network.FeedbackResponse;
-import com.onesandzeros.patima.prediction.model.Location;
+import com.onesandzeros.patima.shared.LoadingDialog;
+import com.onesandzeros.patima.summary.adapter.LocationAdapter;
+import com.onesandzeros.patima.summary.model.NearbyPredictions;
+import com.onesandzeros.patima.summary.network.NearbyPredictionsResponse;
+import com.onesandzeros.patima.summary.network.SummaryApiService;
 import com.onesandzeros.patima.user.utils.ProfileManager;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,43 +45,34 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SummaryActivity extends AppCompatActivity {
-
-    private static final double EARTH_RADIUS_KM = 6371.0;
-    String basePath = null, detectionPath = null, timeStamp = null;
+    String basePath = null, detectionPath = null, location = null;
     int imgId = 0;
     FloatingActionButton feedbackBtn;
-    TextView feedbackTextShow, detectTxt, nearbydetectTxt;
+    TextView feedbackTextShow, detectTxt, nearbydetectTxt, locationName;
     RecyclerView feedbackContainer, nearbyContainer;
-    SQLiteHelper dbHelper;
-    double selectedImg_lat, selectedImg_lon;
+
+    ImageButton backBtn;
+
     private ImageView baseImg;
     private ImageView processedImg;
     private List<Feedback> feedbackList;
     private FeedbackAdapter feedbackAdapter;
-    private List<Location> locationList;
+    private List<NearbyPredictions> locationList;
     private LocationAdapter locationAdapter;
 
-    public static boolean isWithinRadius(double lat, double lon, double targetLat, double targetLon, double radiusKm) {
-        double deltaLat = toDegrees(radiusKm / EARTH_RADIUS_KM);
-        double deltaLon = toDegrees(radiusKm / (EARTH_RADIUS_KM * cos(toRadians(lat))));
-
-        double minLat = lat - deltaLat;
-        double maxLat = lat + deltaLat;
-        double minLon = lon - deltaLon;
-        double maxLon = lon + deltaLon;
-
-        return targetLat >= minLat && targetLat <= maxLat && targetLon >= minLon && targetLon <= maxLon;
-    }
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
+        loadingDialog = new LoadingDialog(this);
+
         imgId = getIntent().getIntExtra("imgId", 0);
         basePath = getIntent().getStringExtra("base_path");
         detectionPath = getIntent().getStringExtra("detection_path");
-        //timeStamp = getIntent().getStringExtra("timestamp");
+        location = getIntent().getStringExtra("location");
 
         baseImg = findViewById(R.id.base_image);
         processedImg = findViewById(R.id.processed_image);
@@ -88,85 +82,91 @@ public class SummaryActivity extends AppCompatActivity {
         nearbyContainer = findViewById(R.id.nearby_container);
         detectTxt = findViewById(R.id.detect_txt);
         nearbydetectTxt = findViewById(R.id.nearby_detect_txt);
-
+        backBtn = findViewById(R.id.return_button);
+        locationName = findViewById(R.id.loc_name);
 
         String userTypest = ProfileManager.getProfileRole(this);
 
-        if (userTypest.equals("General Public User")) {
+        if (userTypest.equals("General Public")) {
             feedbackBtn.setVisibility(View.INVISIBLE);
             feedbackTextShow.setVisibility(View.GONE);
             feedbackContainer.setVisibility(View.GONE);
             feedbackBtn.setEnabled(false);
-
         } else {
-//            loaduserFeedbacks();
+            loadPredictedFeedbacks();
         }
 
         loadImages();
-//        loadNearby(imgId);
-//        nearbyImages();
+        nearbyImages();
 
         feedbackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SummaryActivity.this, FeedbackActivity.class);
                 intent.putExtra("imgId", imgId);
+                intent.putExtra("input_image_path", basePath);
+                intent.putExtra("predicted_image_path", detectionPath);
                 startActivity(intent);
             }
         });
 
-    }
-
-    private void loadNearby(int imgId) {
-        dbHelper = new SQLiteHelper(this);
-        String location = dbHelper.getImagetag(imgId);
-        String[] locationParts = location.split(", ");
-        selectedImg_lat = Double.parseDouble(locationParts[0]);
-        selectedImg_lon = Double.parseDouble(locationParts[1]);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = getSharedPreferences("Startup", MODE_PRIVATE);
-        String userTypest = sharedPreferences.getString("userType", "");
-        int userid = sharedPreferences.getInt("userId", 0);
-        if (userTypest.equals("General Public User")) {
-            feedbackBtn.setVisibility(View.INVISIBLE);
-            feedbackTextShow.setVisibility(View.GONE);
-            feedbackContainer.setVisibility(View.GONE);
-            feedbackBtn.setEnabled(false);
-
+        if (location != null) {
+            double latitude = Double.parseDouble(location.split(",")[0]);
+            double longitude = Double.parseDouble(location.split(",")[1]);
+            reverseGeocode(latitude, longitude);
         } else {
-            loadPredictedFeedbacks();
+            locationName.setVisibility(View.GONE);
         }
+
     }
 
     private void loadPredictedFeedbacks() {
+        feedbackList = new ArrayList<>();
+        feedbackAdapter = new FeedbackAdapter(feedbackList, SummaryActivity.this, true);
+        feedbackContainer.setLayoutManager(new LinearLayoutManager(SummaryActivity.this));
+        feedbackContainer.setAdapter(feedbackAdapter);
         FeedbackApiService feedbackApiService = ApiClient.getClient(this).create(FeedbackApiService.class);
         Call<FeedbackResponse> call = feedbackApiService.retrieveFeedbacksByPredId(imgId);
+        loadingDialog.show();
         call.enqueue(new Callback<FeedbackResponse>() {
             @Override
             public void onResponse(Call<FeedbackResponse> call, Response<FeedbackResponse> response) {
+                loadingDialog.dismiss();
                 if (response.isSuccessful()) {
-                    feedbackList = response.body().getFeedbacks();
-                    feedbackAdapter = new FeedbackAdapter(feedbackList, SummaryActivity.this, true);
-                    feedbackContainer.setLayoutManager(new LinearLayoutManager(SummaryActivity.this));
-                    feedbackContainer.setAdapter(feedbackAdapter);
+                    List<Feedback> feedbacks = response.body().getFeedbacks();
+                    feedbackList.addAll(feedbacks);
+                    feedbackAdapter.notifyDataSetChanged();
+                    if (feedbackList.size() == 0) {
+                        detectTxt.setVisibility(View.VISIBLE);
+                    } else {
+                        detectTxt.setVisibility(View.GONE);
+                    }
+                } else {
+                    detectTxt.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void onFailure(Call<FeedbackResponse> call, Throwable t) {
-
+                loadingDialog.dismiss();
+                detectTxt.setVisibility(View.VISIBLE);
+                Toast.makeText(SummaryActivity.this, "Failed to load feedbacks", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     private void loadImages() {
-
         processedImg.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -184,6 +184,7 @@ public class SummaryActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         String fullDetectionPath = UrlUtils.getFullUrl(detectionPath);
         String fullBasePath = UrlUtils.getFullUrl(basePath);
         Glide.with(this)
@@ -193,60 +194,93 @@ public class SummaryActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(fullBasePath)
                 .into(baseImg);
-
-
     }
 
     private void nearbyImages() {
-        dbHelper = new SQLiteHelper(this);
         locationList = new ArrayList<>();
-        locationAdapter = new LocationAdapter(locationList, this, dbHelper);
-
-        int count = 0;
-
+        locationAdapter = new LocationAdapter(locationList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         nearbyContainer.setLayoutManager(layoutManager);
         nearbyContainer.setAdapter(locationAdapter);
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] projection = {"Image_Id", "Tags"};
-
-        Cursor cursor = db.query("IMAGE_TAG", projection, null, null, null, null, "Image_Id DESC");
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int imageid = cursor.getInt(cursor.getColumnIndexOrThrow("Image_Id"));
-                String tags = cursor.getString(cursor.getColumnIndexOrThrow("Tags"));
-
-                Location location = new Location(imageid, tags);
-
-                String[] locationParts = tags.split(", ");
-                double targetLat = Double.parseDouble(locationParts[0]); // Replace with actual latitude to check
-                double targetLon = Double.parseDouble(locationParts[1]);  // Replace with actual longitude to check
-                double radiusKm = 5.0;
-
-                if (isWithinRadius(selectedImg_lat, selectedImg_lon, targetLat, targetLon, radiusKm)) {
-                    if (imageid != imgId) {
-                        //Toast.makeText(this, "The location is within 5 km radius.", Toast.LENGTH_SHORT).show();
-                        locationList.add(location);
-                        count++;
+        SummaryApiService summaryApiService = ApiClient.getClient(this).create(SummaryApiService.class);
+        Call<NearbyPredictionsResponse> call = summaryApiService.getNearbyPredictions(imgId);
+        call.enqueue(new Callback<NearbyPredictionsResponse>() {
+            @Override
+            public void onResponse(Call<NearbyPredictionsResponse> call, Response<NearbyPredictionsResponse> response) {
+                if (response.isSuccessful()) {
+                    List<NearbyPredictions> predictions = response.body().getPredictions();
+                    locationList.addAll(predictions);
+                    locationAdapter.notifyDataSetChanged();
+                    if (locationList.size() == 0) {
+                        nearbydetectTxt.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    //Toast.makeText(this, "The location is not within 5 km radius.", Toast.LENGTH_SHORT).show();
+                    nearbydetectTxt.setVisibility(View.VISIBLE);
                 }
+            }
 
-            } while (cursor.moveToNext());
-            //detectTxt.setVisibility(View.GONE);
-            cursor.close();
-            locationAdapter.notifyDataSetChanged();
-        } else {
-            //detectTxt.setVisibility(View.VISIBLE);
-        }
+            @Override
+            public void onFailure(Call<NearbyPredictionsResponse> call, Throwable t) {
 
-        if (count == 0) {
-            nearbydetectTxt.setVisibility(View.VISIBLE);
-        }
+            }
+        });
+    }
 
-        db.close();
+    private void reverseGeocode(double latitude, double longitude) {
+
+        final String requestString = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" +
+                latitude + "&lon=" + longitude + "&zoom=18&addressdetails=1";
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(requestString);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                        StringBuilder response = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            response.append(line);
+                        }
+                        reader.close();
+
+                        JSONObject jsonResponse = new JSONObject(response.toString());
+                        JSONObject address = jsonResponse.getJSONObject("address");
+
+                        String townName = "";
+                        if (address.has("town")) {
+                            townName = address.getString("town") + " - " + address.getString("country");
+                        } else if (address.has("village")) {
+                            townName = address.getString("village") + " - " + address.getString("country");
+                        } else if (address.has("state")) {
+                            townName = address.getString("state") + " - " + address.getString("country");
+                        }
+
+                        final String finalTownName = townName;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!finalTownName.isEmpty()) {
+                                    locationName.setText(finalTownName);
+                                } else {
+                                    locationName.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+                    }
+
+                    connection.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

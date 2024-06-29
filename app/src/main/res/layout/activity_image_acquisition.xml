@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    android:fitsSystemWindows="true"
-    tools:context=".prediction.activity.ProcessActivity">
+    tools:context=".ProcessActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,7 +71,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.5" />
 
-                        <com.onesandzeros.patima.OverlayView
+                        <com.onesandzeros.patima.prediction.utils.OverlayView
                             android:id="@+id/overlay"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
@@ -86,47 +85,91 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <TextView
+                        android:id="@+id/inferenceTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/poppins"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:visibility="gone"
+                        tools:text="Processing Delay : 100 milliseconds" />
+
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:src="@drawable/txt_captureoptions">
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/txt_captureoptions"
+                        android:visibility="gone">
 
                     </ImageView>
 
-                    <ImageButton
-                        android:id="@+id/captureBtn"
+                    <Switch
+                        android:id="@+id/mode_switch"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginRight="15dp"
-                        android:background="@drawable/bg_button_opencamera"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="40dp"
+                        android:checked="false"
                         android:fontFamily="@font/poppins_bold"
-                        android:text="Open Camera"
-                        android:textColor="@color/colorPrimaryDark">
+                        android:switchMinWidth="60dp"
+                        android:text="Auto - Capture Headless Statue"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textOff="OFF"
+                        android:textOn="ON"
+                        android:textStyle="bold"
+                        tools:ignore="UseSwitchCompatOrMaterialXml">
 
-                    </ImageButton>
+                    </Switch>
 
-                    <ImageButton
-                        android:id="@+id/galleryBtn"
+                    <LinearLayout
+                        android:id="@+id/camera_btns"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="@drawable/bg_button_gallery"
-                        android:fontFamily="@font/poppins_bold"
-                        android:onClick="selectImage"
-                        android:text="Select from Gallery"
-                        android:textColor="@color/colorPrimaryDark">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/colorPrimaryDark"
+                        android:gravity="center"
+                        android:padding="10dp">
 
-                    </ImageButton>
+                        <ImageButton
+                            android:id="@+id/flashBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/bg_button_flashoff">
+
+                        </ImageButton>
+
+                        <ImageButton
+                            android:id="@+id/captureBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/bg_button_opencamera">
+
+                        </ImageButton>
+
+                        <ImageButton
+                            android:id="@+id/galleryBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/bg_button_gallery"
+                            android:onClick="selectImage">
+
+                        </ImageButton>
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/detect_txt"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
@@ -138,17 +181,6 @@
                         android:visibility="gone">
 
                     </TextView>
-
-                    <TextView
-                        android:id="@+id/inferenceTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="32dp"
-                        android:textColor="@color/white"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="100ms" />
 
                 </LinearLayout>
 

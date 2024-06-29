@@ -1,196 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/conslayout"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    tools:context=".FeedbackActivity">
+    android:background="@color/colorPrimaryDark"
+    tools:context=".MainActivity">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/content_view_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_above="@id/bottom_bar"
+        android:gravity="center" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_bottom_navbar"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/home_button"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:maxWidth="40dp"
+            android:maxHeight="40dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_home_round" />
 
-            <include layout="@layout/card_title_bar_feedback" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/profile_button"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/processed_image"
-                        android:layout_width="200dp"
-                        android:layout_height="250dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:background="@drawable/bg_placeholder"></ImageView>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginRight="15dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="Rating"
-                        android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark"></TextView>
-
-                    <EditText
-                        android:id="@+id/rating_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:background="@drawable/bg_edittext_feedback"
-                        android:fontFamily="@font/poppins"
-                        android:hint="Mention a number between 1-5"
-                        android:inputType="number"
-                        android:maxLength="1"
-                        android:maxLines="1"
-                        android:padding="18dp"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/white"
-                        android:textSize="15dp"></EditText>
-
-                    <!-- New Questions Section -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginRight="15dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="How well does the head match the style of the statue?"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/colorPrimaryDark"></TextView>
-
-                    <Spinner
-                        android:id="@+id/question1_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:background="@drawable/bg_edittext_feedback"
-                        android:minHeight="48dp"></Spinner>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginRight="15dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="How realistic is the generated head?"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/colorPrimaryDark"></TextView>
-
-                    <Spinner
-                        android:id="@+id/question2_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:background="@drawable/bg_edittext_feedback"
-                        android:minHeight="48dp"></Spinner>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginRight="15dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="How satisfied are you with the overall appearance of the statue with the new head?"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/colorPrimaryDark"></TextView>
-
-                    <Spinner
-                        android:id="@+id/question3_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:background="@drawable/bg_edittext_feedback"
-                        android:minHeight="48dp"></Spinner>
-                    <!-- End of New Questions Section -->
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginRight="15dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="Feedback"
-                        android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark"></TextView>
-
-                    <EditText
-                        android:id="@+id/feedback_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:background="@drawable/bg_edittext_feedback"
-                        android:fontFamily="@font/poppins"
-                        android:hint="Mention your feedback here"
-                        android:maxLength="300"
-                        android:padding="18dp"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/white"
-                        android:textSize="15dp"></EditText>
-
-                    <ImageButton
-                        android:id="@+id/submitfeedback_Btn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginRight="15dp"
-                        android:background="@drawable/bg_button_feedback"
-                        android:fontFamily="@font/poppins_bold"
-                        android:textColor="@color/colorPrimaryDark"></ImageButton>
-
-                </LinearLayout>
-
-            </ScrollView>
-
-        </LinearLayout>
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:maxWidth="40dp"
+            android:maxHeight="40dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_user" />
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -1,4 +1,4 @@
-package com.onesandzeros.patima.messages.adapter;
+package com.onesandzeros.patima.messages.network;
 
 import com.onesandzeros.patima.messages.model.Message;
 import com.onesandzeros.patima.messages.model.MessageCommonResponse;

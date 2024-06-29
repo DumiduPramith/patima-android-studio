@@ -3,18 +3,19 @@ package com.onesandzeros.patima.prediction.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
+import android.view.animation.TranslateAnimation;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.onesandzeros.patima.R;
 import com.onesandzeros.patima.core.network.ApiClient;
+import com.onesandzeros.patima.prediction.model.Gps;
 import com.onesandzeros.patima.prediction.model.NewPredictResponse;
 import com.onesandzeros.patima.prediction.network.PredictionApiService;
-import com.onesandzeros.patima.prediction.utils.AcquisitionManager;
 
 import java.io.File;
 
@@ -27,55 +28,97 @@ import retrofit2.Response;
 
 public class ProcessActivity extends AppCompatActivity {
 
+    private final Handler handler = new Handler();
+    private final String[] steps = {"Initializing...", "Segmenting...", "Identifying...", "Magic Logic...", "Completed"};
+    LottieAnimationView lottie;
+    TextView processTxt;
+    String image_path, latitude, longitude;
+    private int step = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_process);
 
-        int img_Id = 0;
+        lottie = findViewById(R.id.lottieAnimationView);
+        processTxt = findViewById(R.id.process_txt);
+
+        lottie.playAnimation();
+        lottie.loop(true);
+
+        updateText();
 
         Intent intent = getIntent();
         if (intent != null) {
-            img_Id = intent.getIntExtra("imgId", 0); // 0 is the default value if INT_VALUE is not found
-            //Toast.makeText(this, String.valueOf(img_Id), Toast.LENGTH_SHORT).show();
+            image_path = intent.getStringExtra("image_path");
+            latitude = intent.getStringExtra("latitude");
+            longitude = intent.getStringExtra("longitude");
+
         } else {
             Toast.makeText(this, "NULL", Toast.LENGTH_SHORT).show();
         }
+        if (image_path != null && latitude != null && longitude != null) {
+            File file = new File(image_path);
+            RequestBody reqFile = RequestBody.create(file, MediaType.parse("image/*"));
+            Gps gps = new Gps(Double.parseDouble(longitude), Double.parseDouble(latitude));
+            MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), reqFile);
 
-        String captured_path = AcquisitionManager.getAcquisitionPath(this);
-        File file = new File(captured_path);
-        RequestBody reqFile = RequestBody.create(file, MediaType.parse("image/*"));
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), reqFile);
+            PredictionApiService predictionApiService = ApiClient.getClient(this).create(PredictionApiService.class);
+            Call<NewPredictResponse> call = predictionApiService.newPrediction(body, gps);
+            call.enqueue(new Callback<NewPredictResponse>() {
+                @Override
+                public void onResponse(Call<NewPredictResponse> call, Response<NewPredictResponse> response) {
+                    if (response.isSuccessful()) {
+                        NewPredictResponse newPredictResponse = response.body();
+                        if (newPredictResponse != null) {
+                            String input_image_path = newPredictResponse.getPrediction().getInputImagePath();
+                            String predicted_image_path = newPredictResponse.getPrediction().getPredictedImagePath();
+                            int prediction_id = newPredictResponse.getPrediction().getImageId();
+                            Intent intent = new Intent(ProcessActivity.this, ViewComparisonActivity.class);
+                            intent.putExtra("input_image_path", input_image_path);
+                            intent.putExtra("predicted_image_path", predicted_image_path);
+                            intent.putExtra("prediction_id", prediction_id);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            finish();
+                        }
+                    } else {
+                        Toast.makeText(ProcessActivity.this, "Failed to process image", Toast.LENGTH_SHORT).show();
+                        finish();
 
-        PredictionApiService predictionApiService = ApiClient.getClient(this).create(PredictionApiService.class);
-        Call<NewPredictResponse> call = predictionApiService.newPrediction(body);
-        call.enqueue(new Callback<NewPredictResponse>() {
-            @Override
-            public void onResponse(Call<NewPredictResponse> call, Response<NewPredictResponse> response) {
-                if (response.isSuccessful()) {
-                    NewPredictResponse newPredictResponse = response.body();
-                    if (newPredictResponse != null) {
-                        String input_image_path = newPredictResponse.getPrediction().getInputImagePath();
-                        String predicted_image_path = newPredictResponse.getPrediction().getPredictedImagePath();
-                        int prediction_id = newPredictResponse.getPrediction().getImageId();
-                        Intent intent = new Intent(ProcessActivity.this, ViewComparisonActivity.class);
-                        intent.putExtra("input_image_path", input_image_path);
-                        intent.putExtra("predicted_image_path", predicted_image_path);
-                        intent.putExtra("prediction_id", prediction_id);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finish(); // Finish the activity
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<NewPredictResponse> call, Throwable t) {
-                Toast.makeText(ProcessActivity.this, "Failed to process image", Toast.LENGTH_SHORT).show();
-                Log.e("Error", t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<NewPredictResponse> call, Throwable t) {
+                    Toast.makeText(ProcessActivity.this, "Failed to process image", Toast.LENGTH_SHORT).show();
+                    Log.e("Error", t.getMessage());
+                    finish();
+                }
+            });
+        }
 
+
+    }
+
+    private void updateText() {
+        if (step < steps.length) {
+            processTxt.setText(steps[step]);
+            applySlideAnimation();
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    step++;
+                    updateText();
+                }
+            }, 2000);
+        }
+    }
+
+    private void applySlideAnimation() {
+        TranslateAnimation animate = new TranslateAnimation(-(processTxt.getWidth()), 0, 0, 0);
+        animate.setDuration(500); // Animation duration
+        processTxt.startAnimation(animate);
     }
 }

@@ -1,9 +1,6 @@
 package com.onesandzeros.patima.prediction.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,17 +12,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.onesandzeros.patima.R;
-import com.onesandzeros.patima.SQLiteHelper;
 import com.onesandzeros.patima.core.utils.UrlUtils;
 import com.onesandzeros.patima.feedback.activity.FeedbackActivity;
+import com.onesandzeros.patima.summary.model.NearbyPredictions;
 import com.onesandzeros.patima.user.utils.ProfileManager;
 
 public class ViewComparisonActivity extends AppCompatActivity {
 
     ImageView baseImg, processedImg;
-    ImageButton feedbackBtn, homeBtn;
+    ImageButton feedbackBtn, homeBtn, backBtn;
     String input_image_path, predicted_image_path;
     int predictionId;
+    boolean isFeedback;
+
+    NearbyPredictions nearbyPrediction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +36,10 @@ public class ViewComparisonActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            input_image_path = intent.getStringExtra("input_image_path");
-            predicted_image_path = intent.getStringExtra("predicted_image_path");
-            predictionId = intent.getIntExtra("predictionId", 0);
+            nearbyPrediction = (NearbyPredictions) intent.getSerializableExtra("nearbyPrediction");
+            input_image_path = nearbyPrediction.getInput_image_path();
+            predicted_image_path = nearbyPrediction.getPredicted_image_path();
+            isFeedback = intent.getBooleanExtra("isFeedback", true);
         } else {
             Toast.makeText(this, "NULL", Toast.LENGTH_SHORT).show();
         }
@@ -47,8 +48,9 @@ public class ViewComparisonActivity extends AppCompatActivity {
         processedImg = findViewById(R.id.processed_image);
         feedbackBtn = findViewById(R.id.feedback_Btn);
         homeBtn = findViewById(R.id.home_Btn);
+        backBtn = findViewById(R.id.return_button);
 
-        if (userTypest.equals("General Public")) {
+        if (userTypest.equals("General Public") || !isFeedback) {
             feedbackBtn.setVisibility(View.GONE);
             feedbackBtn.setEnabled(false);
         }
@@ -88,12 +90,21 @@ public class ViewComparisonActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ViewComparisonActivity.this, FeedbackActivity.class);
-                intent.putExtra("imgId", 0);
+                intent.putExtra("imgId", predictionId);
+                intent.putExtra("input_image_path", input_image_path);
+                intent.putExtra("predicted_image_path", predicted_image_path);
                 startActivity(intent);
             }
         });
 
         homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

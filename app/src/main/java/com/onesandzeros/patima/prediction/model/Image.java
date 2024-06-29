@@ -7,6 +7,8 @@ public class Image {
     private final String predicted_image_path;
     private final String created_at;
 
+    private String tag_name;
+
     public Image(int image_id, String input_image_path, String predicted_image_path, String created_at) {
         this.image_id = image_id;
         this.input_image_path = input_image_path;
@@ -28,5 +30,9 @@ public class Image {
 
     public String getCreatedAt() {
         return created_at;
+    }
+
+    public String getTagName() {
+        return tag_name;
     }
 }

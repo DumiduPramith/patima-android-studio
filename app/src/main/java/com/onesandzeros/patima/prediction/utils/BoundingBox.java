@@ -1,4 +1,4 @@
-package com.onesandzeros.patima;
+package com.onesandzeros.patima.prediction.utils;
 
 public class BoundingBox {
     private float x1;

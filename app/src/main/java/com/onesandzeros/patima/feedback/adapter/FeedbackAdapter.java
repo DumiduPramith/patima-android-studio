@@ -5,32 +5,31 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.onesandzeros.patima.R;
-import com.onesandzeros.patima.SQLiteHelper;
-import com.onesandzeros.patima.prediction.activity.ViewComparisonActivity;
+import com.onesandzeros.patima.core.utils.UrlUtils;
+import com.onesandzeros.patima.feedback.activity.ViewSingleFeedbackActivity;
 import com.onesandzeros.patima.feedback.model.Feedback;
 import com.onesandzeros.patima.user.utils.ProfileManager;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.ViewHolder> {
 
+    private final List<Feedback> feedbackList;
+    private final Context context;
     boolean isSummaey;
     String userName = null, outputImage = null, inputImage = null;
-    SQLiteHelper dbHelper;
-    int userid;
-    private List<Feedback> feedbackList;
-    private Context context;
 
     public FeedbackAdapter(List<Feedback> feedbackList, Context context, boolean isSummaey) {
         this.feedbackList = feedbackList;
@@ -50,53 +49,64 @@ public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.ViewHo
     public void onBindViewHolder(@NonNull FeedbackAdapter.ViewHolder holder, int position) {
         Feedback feedback = feedbackList.get(position);
 
-        outputImage = dbHelper.getOutputImagepath(feedback.getImg_id());
-        inputImage = dbHelper.getInputImagepath(feedback.getImg_id());
-        holder.feedbackTxt.setText(feedback.getDesc());
-        holder.ratingTxt.setText(String.valueOf(feedback.getRating()) + " out of 5");
-        holder.usernameTxt.setText("By " + userName);
+        outputImage = feedback.getPredicted_img();
+        inputImage = feedback.getInput_img();
+        holder.feedbackTxt.setText(feedback.getFeedback());
+        holder.ratingTxt.setText(feedback.getRating() + " out of 5");
+        holder.usernameTxt.setText(userName);
+
+        int rating = feedback.getRating();
+
+
+// Assuming the holder and context are already defined
+
+// Clear all star images first
+        holder.starOne.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rating_notfilled_small));
+        holder.starTwo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rating_notfilled_small));
+        holder.starThree.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rating_notfilled_small));
+        holder.starFour.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rating_notfilled_small));
+        holder.starFive.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rating_notfilled_small));
+
+// Set filled stars based on rating
+        if (rating >= 1) {
+            holder.starOne.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rating_filled_small));
+        }
+        if (rating >= 2) {
+            holder.starTwo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rating_filled_small));
+        }
+        if (rating >= 3) {
+            holder.starThree.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rating_filled_small));
+        }
+        if (rating >= 4) {
+            holder.starFour.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rating_filled_small));
+        }
+        if (rating == 5) {
+            holder.starFive.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rating_filled_small));
+        }
+
 
         if (isSummaey) {
             holder.feedbackImg.setVisibility(View.GONE);
             holder.feedbackuserImg.setVisibility(View.VISIBLE);
 
-            String profilepicturePath = dbHelper.getProfilepicture(userid);
-
-            if (profilepicturePath.contains("http")) {
-                Picasso.get()
-                        .load(profilepicturePath)
-                        .placeholder(R.drawable.placeholder_profile)
-                        .into(holder.feedbackuserImg);
-            } else {
-                File imageFile = new File(profilepicturePath);
-                Picasso.get()
-                        .load(imageFile)
-                        .placeholder(R.drawable.placeholder_profile)
-                        .into(holder.feedbackuserImg);
-            }
-
+            String profilepicturePath = ProfileManager.getProfileImage(context);
+            String fullProfilePath = UrlUtils.getFullUrl(profilepicturePath);
+            Picasso.get()
+                    .load(fullProfilePath)
+                    .placeholder(R.drawable.placeholder_profile)
+                    .into(holder.feedbackuserImg);
         } else {
-            if (outputImage.contains("http")) {
-                Picasso.get()
-                        .load(outputImage)
-                        .placeholder(R.drawable.placeholder_profile)
-                        .into(holder.feedbackImg);
-            } else {
-                File imageFile = new File(outputImage);
-                Picasso.get()
-                        .load(imageFile)
-                        .placeholder(R.drawable.ic_welcome)
-                        .into(holder.feedbackImg);
-            }
+            String output_image_full_path = UrlUtils.getFullUrl(outputImage);
+            Picasso.get()
+                    .load(output_image_full_path)
+                    .placeholder(R.drawable.placeholder_profile)
+                    .into(holder.feedbackImg);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, ViewComparisonActivity.class);
-                    intent.putExtra("imgId", feedback.getImg_id());
-                    intent.putExtra("base_path", inputImage);
-                    intent.putExtra("detection_path", outputImage);
-                    intent.putExtra("timestamp", "Not specified");
+                    Intent intent = new Intent(context, ViewSingleFeedbackActivity.class);
+                    intent.putExtra("feedback", feedback);
                     context.startActivity(intent);
 
                 }
@@ -115,6 +125,7 @@ public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.ViewHo
         ImageView feedbackImg;
         TextView feedbackTxt, ratingTxt, usernameTxt;
         CircleImageView feedbackuserImg;
+        ImageButton starOne, starTwo, starThree, starFour, starFive;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -123,6 +134,12 @@ public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.ViewHo
             feedbackTxt = itemView.findViewById(R.id.feedtxt_feedback);
             ratingTxt = itemView.findViewById(R.id.feedtxt_rate);
             usernameTxt = itemView.findViewById(R.id.feedtxt_username);
+
+            starOne = itemView.findViewById(R.id.star_lvl1);
+            starTwo = itemView.findViewById(R.id.star_lvl2);
+            starThree = itemView.findViewById(R.id.star_lvl3);
+            starFour = itemView.findViewById(R.id.star_lvl4);
+            starFive = itemView.findViewById(R.id.star_lvl5);
         }
     }
 }
