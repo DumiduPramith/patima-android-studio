@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/conslayout"
     android:layout_width="match_parent"
@@ -52,42 +53,42 @@
                         android:gravity="center"
                         android:orientation="horizontal">
 
-                        <!--                        <com.facebook.drawee.view.SimpleDraweeView-->
-                        <!--                            android:id="@+id/input_image"-->
-                        <!--                            android:layout_width="0dp"-->
-                        <!--                            android:layout_height="wrap_content"-->
-                        <!--                            android:layout_marginRight="10dp"-->
-                        <!--                            android:layout_weight="1"-->
-                        <!--                            android:adjustViewBounds="true"-->
-                        <!--                            fresco:actualImageScaleType="fitCenter"-->
-                        <!--                            fresco:placeholderImage="@drawable/bg_placeholder" />-->
-
-                        <!--                        <com.facebook.drawee.view.SimpleDraweeView-->
-                        <!--                            android:id="@+id/processed_image"-->
-                        <!--                            android:layout_width="0dp"-->
-                        <!--                            android:layout_height="wrap_content"-->
-                        <!--                            android:layout_weight="1"-->
-                        <!--                            android:adjustViewBounds="true"-->
-                        <!--                            fresco:actualImageScaleType="fitCenter"-->
-                        <!--                            fresco:placeholderImage="@drawable/bg_placeholder" />-->
-
-
-                        <ImageView
+                        <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/input_image"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
                             android:layout_weight="1"
                             android:adjustViewBounds="true"
-                            android:background="@drawable/bg_placeholder" />
+                            fresco:actualImageScaleType="fitCenter"
+                            fresco:placeholderImage="@drawable/bg_placeholder" />
 
-                        <ImageView
+                        <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/processed_image"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:adjustViewBounds="true"
-                            android:background="@drawable/bg_placeholder" />
+                            fresco:actualImageScaleType="fitCenter"
+                            fresco:placeholderImage="@drawable/bg_placeholder" />
+
+
+                        <!--                        <ImageView-->
+                        <!--                            android:id="@+id/input_image"-->
+                        <!--                            android:layout_width="0dp"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:layout_marginRight="10dp"-->
+                        <!--                            android:layout_weight="1"-->
+                        <!--                            android:adjustViewBounds="true"-->
+                        <!--                            android:background="@drawable/bg_placeholder" />-->
+
+                        <!--                        <ImageView-->
+                        <!--                            android:id="@+id/processed_image"-->
+                        <!--                            android:layout_width="0dp"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:layout_weight="1"-->
+                        <!--                            android:adjustViewBounds="true"-->
+                        <!--                            android:background="@drawable/bg_placeholder" />-->
 
                     </LinearLayout>
 

@@ -2,27 +2,26 @@ package com.onesandzeros.patima.feedback.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.onesandzeros.patima.R;
 import com.onesandzeros.patima.core.utils.UrlUtils;
 import com.onesandzeros.patima.feedback.activity.ViewSingleFeedbackActivity;
 import com.onesandzeros.patima.feedback.model.Feedback;
 import com.onesandzeros.patima.user.utils.ProfileManager;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.ViewHolder> {
 
@@ -91,16 +90,24 @@ public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.ViewHo
 
             String profilepicturePath = ProfileManager.getProfileImage(context);
             String fullProfilePath = UrlUtils.getFullUrl(profilepicturePath);
-            Picasso.get()
-                    .load(fullProfilePath)
-                    .placeholder(R.drawable.placeholder_profile)
-                    .into(holder.feedbackuserImg);
+            Uri profilePictureUri = Uri.parse(fullProfilePath);
+
+            RoundingParams roundingParams = RoundingParams.asCircle();
+            holder.feedbackuserImg.getHierarchy().setRoundingParams(roundingParams);
+            holder.feedbackuserImg.setImageURI(profilePictureUri);
+            
+//            Picasso.get()
+//                    .load(fullProfilePath)
+//                    .placeholder(R.drawable.placeholder_profile)
+//                    .into(holder.feedbackuserImg);
         } else {
             String output_image_full_path = UrlUtils.getFullUrl(outputImage);
-            Picasso.get()
-                    .load(output_image_full_path)
-                    .placeholder(R.drawable.placeholder_profile)
-                    .into(holder.feedbackImg);
+            Uri outputImageUri = Uri.parse(output_image_full_path);
+            holder.feedbackImg.setImageURI(outputImageUri);
+//            Picasso.get()
+//                    .load(output_image_full_path)
+//                    .placeholder(R.drawable.placeholder_profile)
+//                    .into(holder.feedbackImg);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -122,9 +129,11 @@ public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView feedbackImg;
+        //        ImageView feedbackImg;
         TextView feedbackTxt, ratingTxt, usernameTxt;
-        CircleImageView feedbackuserImg;
+//        CircleImageView feedbackuserImg;
+
+        SimpleDraweeView feedbackImg, feedbackuserImg;
         ImageButton starOne, starTwo, starThree, starFour, starFive;
 
         public ViewHolder(@NonNull View itemView) {

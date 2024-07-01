@@ -1,6 +1,8 @@
 package com.onesandzeros.patima.prediction.model;
 
-public class Image {
+import java.io.Serializable;
+
+public class Image implements Serializable {
 
     private final int image_id;
     private final String input_image_path;

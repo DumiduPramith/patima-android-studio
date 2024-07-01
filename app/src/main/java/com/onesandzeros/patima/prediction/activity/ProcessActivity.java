@@ -71,13 +71,9 @@ public class ProcessActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         NewPredictResponse newPredictResponse = response.body();
                         if (newPredictResponse != null) {
-                            String input_image_path = newPredictResponse.getPrediction().getInputImagePath();
-                            String predicted_image_path = newPredictResponse.getPrediction().getPredictedImagePath();
-                            int prediction_id = newPredictResponse.getPrediction().getImageId();
                             Intent intent = new Intent(ProcessActivity.this, ViewComparisonActivity.class);
-                            intent.putExtra("input_image_path", input_image_path);
-                            intent.putExtra("predicted_image_path", predicted_image_path);
-                            intent.putExtra("prediction_id", prediction_id);
+                            intent.putExtra("newPrediction", newPredictResponse.getPrediction());
+                            intent.putExtra("isFeedback", true);
                             startActivity(intent);
                             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                             finish();

@@ -51,13 +51,12 @@
                             android:gravity="center"
                             android:orientation="vertical">
 
-                            
+
                             <com.facebook.drawee.view.SimpleDraweeView
                                 android:id="@+id/profile_img"
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"
                                 fresco:actualImageScaleType="centerCrop"
-                                fresco:failureImage="@drawable/bg_placeholder"
                                 fresco:placeholderImage="@drawable/placeholder_profile"
                                 fresco:roundAsCircle="true" />
 

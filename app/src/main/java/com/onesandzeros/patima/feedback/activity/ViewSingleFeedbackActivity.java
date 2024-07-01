@@ -1,22 +1,24 @@
 package com.onesandzeros.patima.feedback.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.onesandzeros.patima.R;
 import com.onesandzeros.patima.core.utils.UrlUtils;
 import com.onesandzeros.patima.feedback.model.Feedback;
-import com.squareup.picasso.Picasso;
 
 public class ViewSingleFeedbackActivity extends AppCompatActivity {
 
-    ImageView processedImg;
+//    ImageView processedImg;
+
+    SimpleDraweeView processedImg;
     EditText spinnerOneTxt, spinnerTwoTxt, spinnerThreeTxt, feedbackTxt;
     ImageButton backBtn, starOne, starTwo, starThree, starFour, starFive;
     TextView ratingLvlTxt;
@@ -78,9 +80,13 @@ public class ViewSingleFeedbackActivity extends AppCompatActivity {
             ratingLvlTxt.setText("5 out of 5 : Great!");
         }
         String full_url = UrlUtils.getFullUrl(feedback.getPredicted_img());
-        Picasso.get()
-                .load(full_url)
-                .into(processedImg);
+        Uri full_uri = Uri.parse(full_url);
+
+        processedImg.setImageURI(full_uri);
+
+//        Picasso.get()
+//                .load(full_url)
+//                .into(processedImg);
 
 
         backBtn.setOnClickListener(v -> {

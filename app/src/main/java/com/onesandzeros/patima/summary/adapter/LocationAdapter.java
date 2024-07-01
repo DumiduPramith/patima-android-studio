@@ -1,19 +1,19 @@
 package com.onesandzeros.patima.summary.adapter;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.onesandzeros.patima.R;
 import com.onesandzeros.patima.core.utils.UrlUtils;
 import com.onesandzeros.patima.prediction.activity.ViewComparisonActivity;
 import com.onesandzeros.patima.summary.model.NearbyPredictions;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -36,10 +36,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         NearbyPredictions nearbyPrediction = locationList.get(position);
         String picturePath = nearbyPrediction.getPredicted_image_path();
         String fullPicturePath = UrlUtils.getFullUrl(picturePath);
-        Picasso.get()
-                .load(fullPicturePath)
-                .placeholder(R.drawable.placeholder_profile)
-                .into(holder.objImg);
+        Uri fullPictureUri = Uri.parse(fullPicturePath);
+        holder.objImg.setImageURI(fullPictureUri);
+
+//        Picasso.get()
+//                .load(fullPicturePath)
+//                .placeholder(R.drawable.placeholder_profile)
+//                .into(holder.objImg);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +61,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView objImg;
+//        ImageView objImg;
+
+        SimpleDraweeView objImg;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

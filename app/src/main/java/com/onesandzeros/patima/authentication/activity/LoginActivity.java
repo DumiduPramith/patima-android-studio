@@ -133,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                         TokenManager.saveToken(LoginActivity.this, loginResponse.getToken().getAccess());
                         Singleton.getInstance().setFunctionRun(false);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     } else {

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/conslayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".SummaryActivity">
+    tools:context=".summary.activity.SummaryActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,26 +37,48 @@
                 android:layout_height="300dp"
                 android:layout_gravity="center">
 
-                <ImageView
+                <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/base_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:background="@color/white"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    app:placeholderImage="@drawable/bg_placeholder"
+                    fresco:actualImageScaleType="fitCenter" />
 
-                </ImageView>
-
-                <ImageView
+                <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/processed_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    app:placeholderImage="@drawable/bg_placeholder"
+                    fresco:actualImageScaleType="fitCenter" />
 
-                </ImageView>
+
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/base_image"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="match_parent"-->
+                <!--                    android:layout_gravity="center"-->
+                <!--                    android:layout_marginTop="10dp"-->
+                <!--                    android:background="@color/white"-->
+                <!--                    android:visibility="gone">-->
+
+                <!--                </ImageView>-->
+
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/processed_image"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="match_parent"-->
+                <!--                    android:layout_gravity="center"-->
+                <!--                    android:layout_marginTop="10dp"-->
+                <!--                    android:background="@color/white">-->
+
+                <!--                </ImageView>-->
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/btn_feedback"

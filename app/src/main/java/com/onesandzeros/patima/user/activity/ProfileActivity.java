@@ -25,7 +25,9 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.onesandzeros.patima.MainActivity;
 import com.onesandzeros.patima.R;
+import com.onesandzeros.patima.authentication.utils.AuthenticationHelper;
 import com.onesandzeros.patima.core.network.ApiClient;
 import com.onesandzeros.patima.core.utils.UrlUtils;
 import com.onesandzeros.patima.shared.LoadingDialog;
@@ -33,7 +35,6 @@ import com.onesandzeros.patima.user.model.User;
 import com.onesandzeros.patima.user.network.AccountApiService;
 import com.onesandzeros.patima.user.network.AccountResponse;
 import com.onesandzeros.patima.user.utils.LoadAccount;
-import com.onesandzeros.patima.user.utils.ProfileManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -153,8 +154,14 @@ public class ProfileActivity extends AppCompatActivity {
                             loadingDialog.dismiss();
                             if (response.isSuccessful()) {
                                 Toast.makeText(ProfileActivity.this, "Account deleted successfully", Toast.LENGTH_SHORT).show();
-                                ProfileManager.clearProfile(ProfileActivity.this);
-                                finish();
+                                Boolean isLoggedOut = AuthenticationHelper.logOut(ProfileActivity.this);
+                                if (isLoggedOut) {
+                                    Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                    finish();
+                                }
+                                
                             } else {
                                 try {
                                     AccountResponse accountResponse = new Gson().fromJson(response.errorBody().charStream(), AccountResponse.class);
@@ -330,7 +337,7 @@ public class ProfileActivity extends AppCompatActivity {
             userFname.setError("Required.");
             valid = false;
         }
-        if (TextUtils.isEmpty(userLname.getText().toString())) {
+        if (TextUtils.isEmpty(userLname.getText().toString()) && account_details.getLname() != null) {
             userLname.setError("Required.");
             valid = false;
         }

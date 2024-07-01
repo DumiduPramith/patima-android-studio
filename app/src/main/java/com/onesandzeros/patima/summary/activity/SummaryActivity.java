@@ -1,11 +1,11 @@
 package com.onesandzeros.patima.summary.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.onesandzeros.patima.R;
 import com.onesandzeros.patima.core.network.ApiClient;
@@ -53,8 +53,8 @@ public class SummaryActivity extends AppCompatActivity {
 
     ImageButton backBtn;
 
-    private ImageView baseImg;
-    private ImageView processedImg;
+    //    private ImageView baseImg, processedImg;
+    private SimpleDraweeView baseImg, processedImg;
     private List<Feedback> feedbackList;
     private FeedbackAdapter feedbackAdapter;
     private List<NearbyPredictions> locationList;
@@ -187,13 +187,18 @@ public class SummaryActivity extends AppCompatActivity {
 
         String fullDetectionPath = UrlUtils.getFullUrl(detectionPath);
         String fullBasePath = UrlUtils.getFullUrl(basePath);
-        Glide.with(this)
-                .load(fullDetectionPath)
-                .into(processedImg);
+        Uri fullDetectionUri = Uri.parse(fullDetectionPath);
+        Uri fullBaseUri = Uri.parse(fullBasePath);
+        processedImg.setImageURI(fullDetectionUri);
+        baseImg.setImageURI(fullBaseUri);
 
-        Glide.with(this)
-                .load(fullBasePath)
-                .into(baseImg);
+//        Glide.with(this)
+//                .load(fullDetectionPath)
+//                .into(processedImg);
+//
+//        Glide.with(this)
+//                .load(fullBasePath)
+//                .into(baseImg);
     }
 
     private void nearbyImages() {

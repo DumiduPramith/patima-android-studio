@@ -1,11 +1,11 @@
 package com.onesandzeros.patima.feedback.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.onesandzeros.patima.R;
 import com.onesandzeros.patima.core.network.ApiClient;
@@ -30,18 +30,19 @@ public class FeedbackActivity extends AppCompatActivity {
 
     // Define arrays for the spinner options
     private final String[] answersQuestion1 = {
-            "Select an option", "Very well", "Somewhat well", "Neutral", "Not well", "Not applicable"
+            "Select an option", "Not Accurate", "Slightly Accurate", "Moderately Accurate", "Mostly Accurate", "Completely Accurate"
     };
     private final String[] answersQuestion2 = {
-            "Select an option", "Very realistic", "Somewhat realistic", "Neutral", "Not very realistic", "Not applicable"
+            "Select an option", "Not Accurate", "Slightly Accurate", "Moderately Accurate", "Mostly Accurate", "Completely Accurate"
     };
     private final String[] answersQuestion3 = {
-            "Select an option", "Very satisfied", "Somewhat satisfied", "Neutral", "Not very satisfied", "Not applicable"
+            "Select an option", "Not Accurate", "Slightly Accurate", "Moderately Accurate", "Mostly Accurate", "Completely Accurate"
     };
 
     int img_Id;
     TextView feedbackTxt, ratingLvlTxt;
-    ImageView inputImg, processedImg;
+    //    ImageView inputImg, processedImg;
+    SimpleDraweeView inputImg, processedImg;
     ImageButton submitBtn, backBtn, starOne, starTwo, starThree, starFour, starFive;
     Spinner question1Spinner, question2Spinner, question3Spinner;
     String input_image_path = null, predicted_image_path = null;
@@ -185,15 +186,19 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void loadImages() {
-        String input_img_full_path = UrlUtils.getFullUrl(input_image_path);
-        String predicted_img_full_path = UrlUtils.getFullUrl(predicted_image_path);
-        Glide.with(this)
-                .load(input_img_full_path)
-                .into(inputImg);
+        Uri input_img_full_path = Uri.parse(UrlUtils.getFullUrl(input_image_path));
+        Uri predicted_img_full_path = Uri.parse(UrlUtils.getFullUrl(predicted_image_path));
 
-        Glide.with(this)
-                .load(predicted_img_full_path)
-                .into(processedImg);
+        inputImg.setImageURI(input_img_full_path);
+        processedImg.setImageURI(predicted_img_full_path);
+
+//        Glide.with(this)
+//                .load(input_img_full_path)
+//                .into(inputImg);
+//
+//        Glide.with(this)
+//                .load(predicted_img_full_path)
+//                .into(processedImg);
     }
 
     private boolean checkFields() {
